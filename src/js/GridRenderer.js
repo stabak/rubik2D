@@ -9,6 +9,10 @@
  * @param box {jQuery}
  * @constructor
  */
+
+var colors = ['red', 'green', 'blue', 'yellow', 'orange', 'black',  'white', 'teal', 'brown', 'olive', 'violet'];
+
+
 function GridRenderer(grid, cellSize, box){
     this.grid = grid;
     this.cells = {};
@@ -34,7 +38,8 @@ GridRenderer.prototype.Initialize = function(){
         for(var x=0; x<this.grid.width; x++) {
             var cell = $('<div/>', {
                 class: 'cell',
-                text: x + '-' + y
+                text: x + '-' + y,
+                style: 'background-color: '+ colors[this.grid.GetCell(x,y).content] + ';'
             }).appendTo(row);
             this.cells[this.GetCellIndex(x, y)] = cell[0];
         }

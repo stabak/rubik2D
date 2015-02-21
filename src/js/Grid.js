@@ -6,6 +6,7 @@ function Grid(width, height) {
     this.width = width;
     this.height = height;
     this.array = [];
+    this.init();
 }
 Grid.prototype.init = function() {
     //List of cells: nxm
@@ -21,7 +22,7 @@ Grid.prototype.init = function() {
 };
 
 Grid.prototype.GetCell = function(x,y) {
-    return this.array[x][y];
+    return this.array[y][x];
 };
 
 Grid.prototype.Shift = function(cellPos, direction) {
