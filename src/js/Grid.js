@@ -74,16 +74,32 @@ Grid.prototype.ShiftRow = function(index, direction) {
     }
 };
 
-Grid.prototype.MixRandomly = function() {
+Grid.prototype.MixRandomly = function(times) {
+    for(var i = 0; i<times; i++) {
+        var rndx = Math.floor(Math.random()*this.width);
+        var rndy = Math.floor(Math.random()*this.height);
+        var rnds = Math.ceil(Math.random()*3);
 
+        if(Math.random()<0.5){ rnds = -1*rnds;}
+
+        var position = {x:rndx, y:rndy};
+        var direction = {x:0, y:rnds};
+
+        if(Math.random()<0.5 && i != 0){ direction = {x:rnds,y:0};}
+
+        this.Shift(position, direction);
+    }
 };
 
 Grid.prototype.IsResolved = function() {
     for(var i = 0; i<array.length; i++){
         for(var j =0; j< array[i].length-1; j++){
-            // TODO
+            if(array[i][j].content !== array[i][j+1].content){
+                return false;
+            }
         }
     }
+    return true;
 };
 
 Grid.prototype.GetRowClone = function(index) {
