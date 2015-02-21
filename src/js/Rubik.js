@@ -10,6 +10,7 @@
  */
 function Rubik(width,height){
     var grid = new Grid(width, height);
+    grid.MixRandomly(10);
     var box = $("#main-container");
     var gridRenderer = new GridRenderer(grid, 50, box);
     var gridController = new GridController(grid, gridRenderer, box);
