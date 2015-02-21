@@ -19,16 +19,37 @@ function GridController(grid, gridRenderer, box){
 
     this.leftButtonDown = false;
     this.lastPressedPos = null;
+    this.lastMovementDirection = null;
+    this.moveThreshold = 10;
 }
 
 GridController.prototype.OnMouseMove = function(e){
-   if(e.which === 1 && this.leftButtonDown){
+   if(e.which === 1 && this.leftButtonDown) {
        this.mousePos = {x: e.pageX, y: e.pageY};
        // find out mouse direction
-       console.log("mouse move. clicked pos: " + this.lastPressedPos.x + ", " + this.lastPressedPos.y +" current pos: "+ this.mousePos.x + ", "+this.mousePos.y);
-       this.gridRenderer.OnMouseMove({x:this.mousePos.x, y:this.mousePos.y},
-           {x:this.mousePos.x - this.lastPressedPos.x, y:this.mousePos.y - this.lastPressedPos.y});
+       //console.log("mouse move. clicked pos: " + this.lastPressedPos.x + ", " + this.lastPressedPos.y +" current pos: "+ this.mousePos.x + ", "+this.mousePos.y);
+       var dir = {x: this.mousePos.x - this.lastPressedPos.x, y: this.mousePos.y - this.lastPressedPos.y};
+
+       if(dir.x>this.moveThreshold || dir.y > this.moveThreshold) {
+           console.log("mouse move. dir: " + dir.x + ", " + dir.y);
+           this.gridRenderer.OnMouseMove({x: this.mousePos.x, y: this.mousePos.y}, dir);
+       }
+
+       var normalizedDir = GetNormalizedDir(dir);
+       var lastNormalizedDir = null;
+       if (lastNormalizedDir != null) {
+           lastNormalizedDir = GetNormalizedDir(this.lastMovementDirection);
+       }
+
+       if (lastNormalizedDir == null || (lastNormalizedDir.y > lastNormalizedDir.x && normalizedDir.y > normalizedDir.x)) {
+           this.gridRenderer.OnMouseDirectionAxisChanged();
+       }
+       this.lastMovementDirection = dir;
    }
+};
+
+var GetNormalizedDir = function(vector){
+    return {x: Math.abs(vector.x), y: Math.abs(vector.y)};
 };
 
 GridController.prototype.OnMouseUp = function(e){

@@ -3,6 +3,7 @@
     position: relative;
     top: 100px;
     left: 100px;
+    background-color: grey;
 }
 
 .cell{
@@ -17,6 +18,10 @@
     box-sizing: border-box;
 }
 
+.reflection{
+    position: absolute;
+    white-space: nowrap;
+}
 .not-selectable{
     -webkit-user-select: none;  /* Chrome all / Safari all */
     -moz-user-select: none;     /* Firefox all */

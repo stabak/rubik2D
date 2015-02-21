@@ -17,7 +17,9 @@ function GridRenderer(grid, cellSize, box){
     this.Initialize();
 
     this.clickedCell = null;
-    this.moveThreshold = 10;
+    this.draggedGroup;
+    this.reflection;
+    this.axis;
 }
 
 /**
@@ -26,11 +28,11 @@ function GridRenderer(grid, cellSize, box){
  */
 GridRenderer.prototype.Initialize = function(){
     for(var y=0; y<this.grid.height; y++){
-        var row = jQuery('<div/>', {
+        var row = $('<div/>', {
             class: 'row'
         }).appendTo(this.box);
         for(var x=0; x<this.grid.width; x++) {
-            var cell = jQuery('<div/>', {
+            var cell = $('<div/>', {
                 class: 'cell',
                 text: x + '-' + y
             }).appendTo(row);
@@ -39,18 +41,26 @@ GridRenderer.prototype.Initialize = function(){
     }
 };
 
-GridRenderer.prototype.GetRow = function(_y){
+GridRenderer.prototype.GetRow = function(_y, cloneNode){
     var row = [];
     for(var x=0; x<this.grid.width; x++){
-        row[row.length] = this.cells[this.GetCellIndex(x, _y)];
+        if(cloneNode) {
+            row[row.length] = this.cells[this.GetCellIndex(x, _y)].cloneNode(true);
+        }else {
+            row[row.length] = this.cells[this.GetCellIndex(x, _y)];
+        }
     }
     return row;
 };
 
-GridRenderer.prototype.GetColumn = function(_x) {
+GridRenderer.prototype.GetColumn = function(_x, cloneNode) {
     var column = [];
     for(var y=0; y<this.grid.height; y++) {
-        column[column.length] = this.cells[this.GetCellIndex(_x, y)];
+        if(cloneNode) {
+            column[column.length] = this.cells[this.GetCellIndex(_x, y)].cloneNode(true);
+        }else{
+            column[column.length] = this.cells[this.GetCellIndex(_x, y)];
+        }
     }
     return column;
 };
@@ -68,18 +78,59 @@ GridRenderer.prototype.GetCellIndex = function(x,y){
 GridRenderer.prototype.OnMouseMove = function(pos, dir){
     var x = dir.x;
     var y = dir.y;
-    var cells;
-    if(x>y){
-        if(x>this.moveThreshold) {
-            cells = this.GetRow(this.clickedCell.y);
-            $(cells[0]).css('margin-left', x);
+
+    if( this.reflection == null){
+        var cells;
+        this.axis = this.GetAxis(dir);
+        if(this.axis == axis.x){
+            cells = $(this.GetRow(this.clickedCell.y, true));
+            this.draggedGroup = $(this.GetRow(this.clickedCell.y, false));
+        }else{
+            cells = $(this.GetColumn(this.clickedCell.x, true));
+            this.draggedGroup = $(this.GetColumn(this.clickedCell.x, false));
         }
-    }else{
-        if(y>this.moveThreshold) {
-            cells = this.GetColumn(this.clickedCell.x);
-            $(cells[0]).css('margin-top', y);
+        this.draggedGroup.css('visibility', 'hidden');
+        var extendedArray = cells.toArray();
+        var length = extendedArray.length;
+        var count =1;
+        do {
+            for (var i = 0; i < length; i++) {
+                extendedArray[extendedArray.length] = extendedArray[i].cloneNode(true);
+            }
+        }while(count++ < 2);
+
+        var pos = this.GetCellPosition(this.clickedCell);
+        var onePieceWidth = this.grid.width * this.cellSize;
+        this.reflection = $('<div/>', {
+            class: 'reflection'
+        }).appendTo(this.box);
+        this.reflection.offset({left: pos.x - onePieceWidth, top: pos.y});
+        this.reflection.append(extendedArray);
+        if(this.axis == axis.y){
+            this.reflection.width(this.cellSize);
         }
     }
+
+    if(this.axis == axis.x) {
+        this.reflection.css("margin-left", x);
+    }else{
+        this.reflection.css("margin-top", y);
+        var left = this.GetCellPosition(this.clickedCell).x;
+        this.reflection.css("margin-left", left);
+    }
+};
+
+var axis = {
+    x: 'x',
+    y: 'y'
+};
+
+GridRenderer.prototype.GetAxis = function(dir) {
+    return Math.abs(dir.x) > Math.abs(dir.y) ? axis.x : axis.y;
+};
+
+GridRenderer.prototype.OnMouseDirectionAxisChanged = function() {
+    //this.reflection =
 };
 
 GridRenderer.prototype.OnMouseDown = function(pos) {
@@ -91,9 +142,17 @@ GridRenderer.prototype.OnMouseDown = function(pos) {
 };
 
 GridRenderer.prototype.OnMouseUp = function() {
-
+    this.reflection.remove();
+    this.reflection = null;
+    this.draggedGroup.css('visibility', 'visible');
+    this.draggedGroup = null;
 };
 
 GridRenderer.prototype.GetPosition = function() {
     return {x: this.box.offset().left, y: this.box.offset().top};
+};
+
+GridRenderer.prototype.GetCellPosition = function(cell) {
+    var pos = this.GetPosition();
+    return {x: pos.x + cell.x * this.cellSize, y: pos.y + cell.y * this.cellSize};
 };
