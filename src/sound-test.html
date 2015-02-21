@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset='UTF-8'>
+	
+	<title>Sound with jQuery</title>
+
+	<link rel='stylesheet' href='../css/style.css'>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+    <script src="js/Sound.js"></script>
+    <script src="js/SoundManager.js"></script>
+
+</head>
+
+<body>
+  
+	<div id="page-wrap">
+
+		<section id="one"><div class="inside">
+		
+		<ul id="nav-one" class="nav">
+		   <li><a href="#">replay</a></li>
+		   <li><a href="#"><- left</a></li>
+		   <li><a href="#">right -></a></li>
+		   <li><a href="#">next level</a></li>
+		</ul>
+		
+		</div></section>
+
+        <script>
+            var soundmanager;
+            $(document).ready(function(){
+                $("#nav-one a").mouseenter(function() {
+                    soundmanager.sounds["tick"].audio.play();
+                });
+            });
+
+
+            $(window).load(function(){
+                soundmanager = new SoundManager();
+                soundmanager.init();
+                soundmanager.addSound("beep", "../audio/", "beep");
+                soundmanager.addSound("tick", "../audio/", "Tick");
+            });
+
+        </script>
+
+    </div>
+				
+</body>
+
+</html>
