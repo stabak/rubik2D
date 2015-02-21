@@ -1,5 +1,7 @@
 body {
+    text-align: center;
     background-color: antiquewhite;
+    overflow-y:hidden;
 }
 
 #header-container{
@@ -7,12 +9,23 @@ body {
     background-color: #333333;
 }
 
-
 #main-container{
+    vertical-align: top;
+    display: inline-block;
     position: relative;
-    top: 100px;
-    left: 100px;
+    background-color: dodgerblue;
+
 }
+
+#menu-container{
+    align-content: center;
+    vertical-align: top;
+    display: inline-block;
+    background-color: yellowgreen;
+    width: 200px;
+    height: 300px;
+}
+
 .reflection{
     position: absolute;
 }
@@ -40,17 +53,13 @@ body {
 }
 
 
-#menu-container{
-    display: inline-block;
-    background-color: yellowgreen;
-    width: 200px;
-    height: 300px;
-}
 
 .menuText{
     background-color: #5F9EA0;
     margin-bottom:  10px;
+    width: 100px;
 }
+
 #Text2d{
     display: inline-block;
     color: red;
