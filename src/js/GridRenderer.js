@@ -15,10 +15,8 @@ var colors = ['red', 'green', 'blue', 'yellow', 'orange', 'black',  'white', 'te
 
 function GridRenderer(grid, cellSize, box){
     this.grid = grid;
-    this.cells = {};
     this.cellSize = cellSize;
     this.box = box;
-    this.Initialize();
 
     this.gridWidth = this.grid.width * this.cellSize;
     this.gridHeight = this.grid.width * this.cellSize;
@@ -27,6 +25,9 @@ function GridRenderer(grid, cellSize, box){
     this.draggedGroup;
     this.reflection;
     this.axis;
+    this.dir;
+
+    this.Initialize();
 }
 
 /**
@@ -34,6 +35,8 @@ function GridRenderer(grid, cellSize, box){
  * @constructor
  */
 GridRenderer.prototype.Initialize = function(){
+    this.cells = {};
+    this.box.empty();
     for(var y=0; y<this.grid.height; y++){
         var row = $('<div/>', {
             class: 'row'
@@ -41,12 +44,14 @@ GridRenderer.prototype.Initialize = function(){
         for(var x=0; x<this.grid.width; x++) {
             var cell = $('<div/>', {
                 class: 'cell',
-                text: x + '-' + y,
+                /*text: x + '-' + y,*/
                 style: 'background-color: '+ colors[this.grid.GetCell(x,y).content] + ';'
             }).appendTo(row);
             this.cells[this.GetCellIndex(x, y)] = cell[0];
         }
     }
+    this.box.width(this.gridWidth);
+    this.box.height(this.gridHeight);
 };
 
 GridRenderer.prototype.GetRow = function(_y, cloneNode){
@@ -107,28 +112,29 @@ GridRenderer.prototype.OnMouseMove = function(pos, dir){
             }
         }while(count++ < 2);
 
-        this.reflection = $('<div/>', {
-            class: 'reflection'
-        }).appendTo(this.box);
+        this.reflection = $('<div/>', {}).appendTo(this.box);
         var pos = this.GetCellPosition(this.clickedCell);
         if(this.axis == axis.y){
-            this.reflection.offset({left: pos.x, top: pos.y - this.gridHeight / 2});
+            this.reflection.offset({left: pos.x, top: pos.y - this.gridHeight});
             this.reflection.width(this.cellSize);
+            this.reflection.addClass('reflection-vertical');
         }else{
-            this.reflection.offset({left: pos.x - this.gridWidth / 2, top: pos.y});
+            this.reflection.offset({left: pos.x - this.gridWidth, top: pos.y});
+            this.reflection.addClass('reflection');
         }
         this.reflection.append(extendedArray);
     }
 
     if(this.axis == axis.x) {
-        x = Math.max(-this.gridWidth, x);
+        /*x = Math.max(-this.gridWidth, x);
         x = Math.min(x, this.gridWidth);
-        this.reflection.css("margin-left", x);
+        */this.reflection.css("margin-left", x);
     }else{
-        y = Math.max(-this.gridHeight, y);
+        /*y = Math.max(-this.gridHeight, y);
         y = Math.min(y, this.gridHeight);
-        this.reflection.css("margin-top", y);
+        */this.reflection.css("margin-top", y);
     }
+    this.dir = dir;
 };
 
 var axis = {
@@ -150,13 +156,26 @@ GridRenderer.prototype.OnMouseDown = function(pos) {
     var diff = {x: pos.x - boxPos.x, y: pos.y - boxPos.y};
     this.clickedCell = {x: Math.floor(diff.x / this.cellSize), y: Math.floor(diff.y / this.cellSize)};
     console.log("clicked cell: " + this.clickedCell.x + ", " + this.clickedCell.y);
+    soundmanager.sounds["tick"].audio.play();
 };
 
 GridRenderer.prototype.OnMouseUp = function() {
-    this.reflection.remove();
-    this.reflection = null;
+    if(this.reflection != null) {
+        this.reflection.remove();
+        this.reflection = null;
+    }
     this.draggedGroup.css('visibility', 'visible');
     this.draggedGroup = null;
+
+    // update grid
+    var direction = this.dir;
+    if(this.axis == axis.x){
+        direction = {x: -this.dir.x, y: 0};
+    }else{
+        direction = {x: 0, y: -this.dir.y};
+    }
+    this.grid.Shift(this.clickedCell, direction);
+    this.Initialize();
 };
 
 GridRenderer.prototype.GetPosition = function() {

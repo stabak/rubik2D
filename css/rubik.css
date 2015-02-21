@@ -3,20 +3,18 @@ body {
     background-color: antiquewhite;
     overflow-y:hidden;
 }
-
 #header-container{
     height: 100px;
     background-color: #333333;
 }
-
 #main-container{
     vertical-align: top;
     display: inline-block;
     position: relative;
+    overflow:hidden;
+
     background-color: dodgerblue;
-
 }
-
 #menu-container{
     align-content: center;
     vertical-align: top;
@@ -25,9 +23,16 @@ body {
     width: 200px;
     height: 250px;
 }
-
 .reflection{
     position: absolute;
+    white-space: nowrap;
+}
+.reflection-vertical{
+    position: absolute;
+    white-space: nowrap;
+}
+.reflection-vertical .cell {
+    display: block;
 }
 .cell{
     display: inline-block;
@@ -40,7 +45,6 @@ body {
     background-color: coral;
     box-sizing: border-box;
 }
-
 .not-selectable{
 
     -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -52,8 +56,6 @@ body {
     user-select: none;
 }
 
-
-
 .menuText{
     background-color: #5F9EA0;
     margin-top:  20px;
@@ -61,7 +63,6 @@ body {
     margin-left:  50px;
     width: 100px;
 }
-
 #Text2d{
     display: inline-block;
     color: red;

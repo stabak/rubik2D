@@ -19,4 +19,8 @@ function Rubik(width,height){
 $(window).load(function()
 {
     rubik = new Rubik(5,5);
+    soundmanager = new SoundManager();
+    soundmanager.init();
+    soundmanager.addSound("beep", "../audio/", "beep");
+    soundmanager.addSound("tick", "../audio/", "Tick");
 });
