@@ -9,12 +9,13 @@
  * @constructor
  */
 function Rubik(width,height){
-    //TODO create a grid instance
-    //var grid = new Grid(width, height);
-    var gridRenderer = new GridRenderer(null /*grid*/, $("#main-container"));
+    var grid = new Grid(width, height);
+    var box = $("#main-container");
+    var gridRenderer = new GridRenderer(grid, 50, box);
+    var gridController = new GridController(grid, gridRenderer, box);
 }
 
 $(window).load(function()
 {
-    rubik = new Rubik(4,4);
+    rubik = new Rubik(5,5);
 });
