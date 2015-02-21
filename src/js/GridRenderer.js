@@ -16,6 +16,9 @@ function GridRenderer(grid, cellSize, box){
     this.box = box;
     this.Initialize();
 
+    this.gridWidth = this.grid.width * this.cellSize;
+    this.gridHeight = this.grid.width * this.cellSize;
+
     this.clickedCell = null;
     this.draggedGroup;
     this.reflection;
@@ -99,24 +102,27 @@ GridRenderer.prototype.OnMouseMove = function(pos, dir){
             }
         }while(count++ < 2);
 
-        var pos = this.GetCellPosition(this.clickedCell);
-        var onePieceWidth = this.grid.width * this.cellSize;
         this.reflection = $('<div/>', {
             class: 'reflection'
         }).appendTo(this.box);
-        this.reflection.offset({left: pos.x - onePieceWidth, top: pos.y});
-        this.reflection.append(extendedArray);
+        var pos = this.GetCellPosition(this.clickedCell);
         if(this.axis == axis.y){
+            this.reflection.offset({left: pos.x, top: pos.y - this.gridHeight / 2});
             this.reflection.width(this.cellSize);
+        }else{
+            this.reflection.offset({left: pos.x - this.gridWidth / 2, top: pos.y});
         }
+        this.reflection.append(extendedArray);
     }
 
     if(this.axis == axis.x) {
+        x = Math.max(-this.gridWidth, x);
+        x = Math.min(x, this.gridWidth);
         this.reflection.css("margin-left", x);
     }else{
+        y = Math.max(-this.gridHeight, y);
+        y = Math.min(y, this.gridHeight);
         this.reflection.css("margin-top", y);
-        var left = this.GetCellPosition(this.clickedCell).x;
-        this.reflection.css("margin-left", left);
     }
 };
 

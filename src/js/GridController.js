@@ -31,7 +31,7 @@ GridController.prototype.OnMouseMove = function(e){
        var dir = {x: this.mousePos.x - this.lastPressedPos.x, y: this.mousePos.y - this.lastPressedPos.y};
 
        if(dir.x>this.moveThreshold || dir.y > this.moveThreshold) {
-           console.log("mouse move. dir: " + dir.x + ", " + dir.y);
+           //console.log("mouse move. dir: " + dir.x + ", " + dir.y);
            this.gridRenderer.OnMouseMove({x: this.mousePos.x, y: this.mousePos.y}, dir);
        }
 

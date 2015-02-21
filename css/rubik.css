@@ -2,21 +2,20 @@ body {
     background-color: antiquewhite;
 }
 
-#header-container
-{
+#header-container{
     height: 100px;
     background-color: #333333;
 }
 
 
-#main-container
-{
+#main-container{
     position: relative;
     top: 100px;
     left: 100px;
 }
-
-
+.reflection{
+    position: absolute;
+}
 .cell{
     display: inline-block;
     text-align: center;
