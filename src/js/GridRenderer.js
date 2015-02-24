@@ -1,188 +1,101 @@
 /**
- * Created by stabak on 21.02.2015.
+ * Created by akbay on 23/2/2015.
  */
 
-/**
- *
- * @param grid {Grid}
- * @param cellSize {int}
- * @param box {jQuery}
- * @constructor
- */
+function GridRenderer(grid, containerCanvas){
+    this.colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'teal', 'brown', 'olive', 'violet'];
 
-var colors = ['red', 'green', 'blue', 'yellow', 'orange', 'black',  'white', 'teal', 'brown', 'olive', 'violet'];
-
-
-function GridRenderer(grid, cellSize, box){
     this.grid = grid;
-    this.cellSize = cellSize;
-    this.box = box;
 
-    this.gridWidth = this.grid.width * this.cellSize;
-    this.gridHeight = this.grid.width * this.cellSize;
+    this.containerCanvas = containerCanvas;
+    this.ctx = containerCanvas[0].getContext('2d');
+    this.cellContainerWidth = this.containerCanvas.width() / this.grid.width;
+    this.cellContainerHeight = this.containerCanvas.height() / this.grid.height;
+    this.cellWidth = this.cellContainerWidth * 0.9;
+    this.cellHeight = this.cellContainerHeight * 0.9;
+    this.cellHorizontalSeperation = this.cellContainerWidth * 0.1;
+    this.cellVerticalSeperation = this.cellContainerHeight * 0.1;
+    //this.containerCanvas.width() = this.cellContainerWidth*this.grid.width;
+    //this.containerCanvas.height() = this.cellContainerHeight*this.grid.height;
 
-    this.clickedCell = null;
-    this.draggedGroup;
-    this.reflection;
-    this.axis;
-    this.dir;
-
-    this.Initialize();
+    this.clickedPointIndex = {x:0,y:0};
+    this.clickedPointInCanvas = {x:0,y:0};
+    this.shiftDirection = {x:0,y:0};
 }
 
-/**
- * Creates grid dom
- * @constructor
- */
-GridRenderer.prototype.Initialize = function(){
-    this.cells = {};
-    this.box.empty();
-    for(var y=0; y<this.grid.height; y++){
-        var row = $('<div/>', {
-            class: 'row'
-        }).appendTo(this.box);
-        for(var x=0; x<this.grid.width; x++) {
-            var cell = $('<div/>', {
-                class: 'cell',
-                /*text: x + '-' + y,*/
-                style: 'background-color: '+ colors[this.grid.GetCell(x,y).content] + ';'
-            }).appendTo(row);
-            this.cells[this.GetCellIndex(x, y)] = cell[0];
+GridRenderer.prototype.CalculateIntegerSizes = function(){
+    this.cellContainerWidth = Math.floor( this.cellContainerWidth );
+    this.cellContainerHeight = Math.floor( this.cellContainerHeight );
+    this.cellWidth = Math.floor( this.cellWidth );
+    this.cellHeight = Math.floor(  this.cellHeight );
+    this.cellHorizontalSeperation = Math.floor( this.cellHorizontalSeperation );
+    this.cellVerticalSeperation = Math.floor( this.cellVerticalSeperation );
+
+}
+
+GridRenderer.prototype.Draw = function(){
+    this.ctx.clearRect(0,0,this.containerCanvas.width(),this.containerCanvas.height());
+
+    for (var i = 0; i < this.grid.width; i++) {
+        for(var j = 0; j < this.grid.height; j++) {
+            this.DrawCell( i, j, 0, 0);
         }
     }
-    this.box.width(this.gridWidth);
-    this.box.height(this.gridHeight);
-};
+}
 
-GridRenderer.prototype.GetRow = function(_y, cloneNode){
-    var row = [];
-    for(var x=0; x<this.grid.width; x++){
-        if(cloneNode) {
-            row[row.length] = this.cells[this.GetCellIndex(x, _y)].cloneNode(true);
-        }else {
-            row[row.length] = this.cells[this.GetCellIndex(x, _y)];
-        }
-    }
-    return row;
-};
+GridRenderer.prototype.DrawShiftedCells = function(){
+    this.CalculateClickedCellIndex();
+    var visibleShift;
+    var it = 0;
+    var i = 0;
+    if (this.shiftDirection.x !== 0) {
+        this.DrawBlackRow(this.clickedPointIndex.y);
+        visibleShift = this.shiftDirection.x - Math.floor(this.shiftDirection.x /this.containerCanvas.width())*this.containerCanvas.width();
 
-GridRenderer.prototype.GetColumn = function(_x, cloneNode) {
-    var column = [];
-    for(var y=0; y<this.grid.height; y++) {
-        if(cloneNode) {
-            column[column.length] = this.cells[this.GetCellIndex(_x, y)].cloneNode(true);
-        }else{
-            column[column.length] = this.cells[this.GetCellIndex(_x, y)];
-        }
-    }
-    return column;
-};
-
-GridRenderer.prototype.GetCellIndex = function(x,y){
-    return y*(this.grid.width) + x;
-};
-
-/**
- *
- * @param pos
- * @param dir
- * @constructor
- */
-GridRenderer.prototype.OnMouseMove = function(pos, dir){
-    var x = dir.x;
-    var y = dir.y;
-
-    if( this.reflection == null){
-        var cells;
-        this.axis = this.GetAxis(dir);
-        if(this.axis == axis.x){
-            cells = $(this.GetRow(this.clickedCell.y, true));
-            this.draggedGroup = $(this.GetRow(this.clickedCell.y, false));
-        }else{
-            cells = $(this.GetColumn(this.clickedCell.x, true));
-            this.draggedGroup = $(this.GetColumn(this.clickedCell.x, false));
-        }
-        this.draggedGroup.css('visibility', 'hidden');
-        var extendedArray = cells.toArray();
-        var length = extendedArray.length;
-        var count =1;
-        do {
-            for (var i = 0; i < length; i++) {
-                extendedArray[extendedArray.length] = extendedArray[i].cloneNode(true);
+        for (it = -1; it < 1; it++) {
+            for (i = 0; i < this.grid.width; i++) {
+                this.DrawCell( i, this.clickedPointIndex.y, visibleShift + it*this.containerCanvas.width(), 0);
             }
-        }while(count++ < 2);
-
-        this.reflection = $('<div/>', {}).appendTo(this.box);
-        var pos = this.GetCellPosition(this.clickedCell);
-        if(this.axis == axis.y){
-            this.reflection.offset({left: pos.x, top: pos.y - this.gridHeight});
-            this.reflection.width(this.cellSize);
-            this.reflection.addClass('reflection-vertical');
-        }else{
-            this.reflection.offset({left: pos.x - this.gridWidth, top: pos.y});
-            this.reflection.addClass('reflection');
         }
-        this.reflection.append(extendedArray);
+
+    }else if (this.shiftDirection.y !== 0) {
+        this.DrawBlackColumn(this.clickedPointIndex.x);
+        visibleShift = this.shiftDirection.y - Math.floor(this.shiftDirection.y /this.containerCanvas.height())*this.containerCanvas.height();
+
+        for (it = -1; it < 1; it++) {
+            for (i = 0; i < this.grid.height; i++) {
+                this.DrawCell( this.clickedPointIndex.x, i, 0, visibleShift + it*this.containerCanvas.height());
+            }
+        }
     }
+}
 
-    if(this.axis == axis.x) {
-        /*x = Math.max(-this.gridWidth, x);
-        x = Math.min(x, this.gridWidth);
-        */this.reflection.css("margin-left", x);
-    }else{
-        /*y = Math.max(-this.gridHeight, y);
-        y = Math.min(y, this.gridHeight);
-        */this.reflection.css("margin-top", y);
-    }
-    this.dir = dir;
-};
+GridRenderer.prototype.CalculateClickedCellIndex = function(){
+    this.clickedPointIndex.x = Math.floor(this.clickedPointInCanvas.x / this.cellContainerWidth);
+    this.clickedPointIndex.y = Math.floor(this.clickedPointInCanvas.y / this.cellContainerHeight);
+}
 
-var axis = {
-    x: 'x',
-    y: 'y'
-};
+GridRenderer.prototype.DrawCell = function(indexX, indexY, shiftX, shiftY){
+    this.ctx.save();
+    var X = Math.floor( this.cellHorizontalSeperation*0.5 + indexX * (this.cellWidth + this.cellHorizontalSeperation)) + shiftX;
+    var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexY * (this.cellHeight + this.cellVerticalSeperation)) + shiftY;
+    this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
+    this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
+    this.ctx.restore();
+}
 
-GridRenderer.prototype.GetAxis = function(dir) {
-    return Math.abs(dir.x) > Math.abs(dir.y) ? axis.x : axis.y;
-};
+GridRenderer.prototype.DrawBlackRow = function(indexRow){
+    this.ctx.save();
+    var X = 0;
+    var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexRow * (this.cellHeight + this.cellVerticalSeperation));
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillRect (X, Y, this.containerCanvas.width(), this.cellHeight);
+    this.ctx.restore();
+}
 
-GridRenderer.prototype.OnMouseDirectionAxisChanged = function() {
-    //this.reflection =
-};
-
-GridRenderer.prototype.OnMouseDown = function(pos) {
-    // find out which cell pos lies in.
-    var boxPos = this.GetPosition();
-    var diff = {x: pos.x - boxPos.x, y: pos.y - boxPos.y};
-    this.clickedCell = {x: Math.floor(diff.x / this.cellSize), y: Math.floor(diff.y / this.cellSize)};
-    console.log("clicked cell: " + this.clickedCell.x + ", " + this.clickedCell.y);
-    soundmanager.sounds["tick"].audio.play();
-};
-
-GridRenderer.prototype.OnMouseUp = function() {
-    if(this.reflection != null) {
-        this.reflection.remove();
-        this.reflection = null;
-    }
-    this.draggedGroup.css('visibility', 'visible');
-    this.draggedGroup = null;
-
-    // update grid
-    var direction = this.dir;
-    if(this.axis == axis.x){
-        direction = {x: -this.dir.x, y: 0};
-    }else{
-        direction = {x: 0, y: -this.dir.y};
-    }
-    this.grid.Shift(this.clickedCell, direction);
-    this.Initialize();
-};
-
-GridRenderer.prototype.GetPosition = function() {
-    return {x: this.box.offset().left, y: this.box.offset().top};
-};
-
-GridRenderer.prototype.GetCellPosition = function(cell) {
-    var pos = this.GetPosition();
-    return {x: pos.x + cell.x * this.cellSize, y: pos.y + cell.y * this.cellSize};
-};
+GridRenderer.prototype.DrawBlackColumn = function(indexColumn){
+    var X = Math.floor( this.cellHorizontalSeperation*0.5 + indexColumn * (this.cellWidth + this.cellHorizontalSeperation));
+    var Y = 0;
+    this.ctx.fillStyle = 'black';
+    this.ctx.fillRect (X, Y, this.cellWidth, this.containerCanvas.height());
+}

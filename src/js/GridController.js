@@ -9,71 +9,88 @@
  * @param box {jQuery}
  * @constructor
  */
-function GridController(grid, gridRenderer, box){
+function GridController(grid, gridRenderer, containerCanvas){
     this.grid = grid;
     this.gridRenderer = gridRenderer;
-
+    this.containerCanvas = containerCanvas;
 
     // TODO: add onmouse down and up functions to page!!!!!!!!!!!!!!!!!!!!!!
-    box.onmousedown = this.OnMouseDown.bind(this);
-    box.onmouseup = this.OnMouseUp.bind(this);
-    box.onmousemove = this.OnMouseMove.bind(this);
+    this.containerCanvas.mousedown( this.OnMouseDown.bind(this));
+    //this.containerCanvas.mouseup(this.OnMouseUp.bind(this));
+    //this.containerCanvas.mousemove(this.OnMouseMove.bind(this));
 
-    this.leftButtonDown = false;
-    this.lastPressedPos = null;
-    this.lastMovementDirection = null;
-    this.moveThreshold = 10;
+    var body = $('body');
+    body.mouseup(this.OnMouseUp.bind(this));
+    body.mousemove(this.OnMouseMove.bind(this));
+
+    this.isGridShifting = false;
+    this.isShiftingDirectionSelected = false;
+    this.selectedShiftingDirection = "";
+
+    this.mouseDownPosInPage = {x: 0, y: 0};
+    this.mouseDownPosInCanvas = {x: 0, y: 0};
+    this.difDirection = {x: 0, y: 0};
+    this.shiftThreshold = 5;
+
 }
 
 GridController.prototype.OnMouseMove = function(e){
-    console.log("onmouse move add onmouse down and up functions to page!!!!!!!!!!!!!!!!!!!!!! " + e.pageX + " " + e.pageY);
-    /*
-   if(e.which === 1 && this.leftButtonDown) {
-       this.mousePos = {x: e.pageX, y: e.pageY};
-       // find out mouse direction
-       //console.log("mouse move. clicked pos: " + this.lastPressedPos.x + ", " + this.lastPressedPos.y +" current pos: "+ this.mousePos.x + ", "+this.mousePos.y);
-       var dir = {x: this.mousePos.x - this.lastPressedPos.x, y: this.mousePos.y - this.lastPressedPos.y};
+    if(this.isGridShifting){
+        console.log("onmouse move");
 
-       if(dir.x>this.moveThreshold || dir.y > this.moveThreshold) {
-           //console.log("mouse move. dir: " + dir.x + ", " + dir.y);
-           this.gridRenderer.OnMouseMove({x: this.mousePos.x, y: this.mousePos.y}, dir);
-       }
+        var mousePos = {x: e.pageX, y: e.pageY};
 
-       var normalizedDir = GetNormalizedDir(dir);
-       var lastNormalizedDir = null;
-       if (lastNormalizedDir != null) {
-           lastNormalizedDir = GetNormalizedDir(this.lastMovementDirection);
-       }
+        //this.mouseDownPosInCanvas = {x: mousePos.x - this.containerCanvas.offset().left, y: mousePos.y - this.containerCanvas.offset().top};
+        this.difDirection = {x: mousePos.x - this.mouseDownPosInPage.x , y: mousePos.y - this.mouseDownPosInPage.y};
 
-       if (lastNormalizedDir == null || (lastNormalizedDir.y > lastNormalizedDir.x && normalizedDir.y > normalizedDir.x)) {
-           this.gridRenderer.OnMouseDirectionAxisChanged();
-       }
-       this.lastMovementDirection = dir;
-   }
-   */
-};
-
-var GetNormalizedDir = function(vector){
-    return {x: Math.abs(vector.x), y: Math.abs(vector.y)};
+        if(this.isShiftingDirectionSelected === false){
+            if(Math.abs(this.difDirection.x) > Math.abs(this.difDirection.y) && Math.abs(this.difDirection.x) > this.shiftThreshold){
+                this.selectedShiftingDirection = "row";
+                this.isShiftingDirectionSelected = true;
+            }else if (Math.abs(this.difDirection.y) > Math.abs(this.difDirection.x) && Math.abs(this.difDirection.y) > this.shiftThreshold){
+                this.selectedShiftingDirection = "column";
+                this.isShiftingDirectionSelected = true;
+            }
+        }
+        if(this.isShiftingDirectionSelected){
+            if(this.selectedShiftingDirection === "row"){
+                this.difDirection.y = 0;
+            }else if(this.selectedShiftingDirection === "column"){
+                this.difDirection.x = 0;
+            }
+            this.gridRenderer.clickedPointInCanvas = this.mouseDownPosInCanvas;
+            this.gridRenderer.shiftDirection = this.difDirection;
+            this.gridRenderer.DrawShiftedCells();
+            //$('body').line(this.mouseDownPosInPage.x, this.mouseDownPosInPage.y, this.mouseDownPosInPage.x + this.difDirection.x, this.mouseDownPosInPage.y + this.difDirection.y, {color:"red", zindex:1});
+        }
+    }
 };
 
 GridController.prototype.OnMouseUp = function(e){
-    console.log("onmouse up");
-    /*
-    if(e.which === 1) {
-        this.leftButtonDown = false;
-        this.gridRenderer.OnMouseUp();
+    if(this.isGridShifting){
+        var directionInCellSize = { x: Math.round(this.difDirection.x/this.gridRenderer.cellContainerWidth)%this.grid.width, y: Math.round(this.difDirection.y/this.gridRenderer.cellContainerHeight)%this.grid.height};
+        console.log("onmouse up " + directionInCellSize.x + " " + directionInCellSize.y);
+
+        this.grid.Shift(this.gridRenderer.clickedPointIndex, directionInCellSize);
+
+        this.gridRenderer.Draw();
+        // make default all parameters
+        this.isGridShifting = false;
+        this.isShiftingDirectionSelected = false;
+        this.selectedShiftingDirection = "";
+        this.mouseDownPosInPage = {x: 0, y: 0};
+        this.mouseDownPosInCanvas = {x: 0, y: 0};
+        this.difDirection = {x: 0, y: 0};
+        this.gridRenderer.clickedPointInCanvas = {x: 0, y: 0};
+        this.gridRenderer.shiftDirection = {x: 0, y: 0};
     }
-    */
 };
 
 GridController.prototype.OnMouseDown = function(e){
     console.log("onmouse down");
-    /*
-    if(e.which === 1) {
-        this.leftButtonDown = true;
-        this.lastPressedPos = {x: e.pageX, y: e.pageY};
-        this.gridRenderer.OnMouseDown(this.lastPressedPos);
+    if(e.which === 1){
+        this.isGridShifting = true;
+        this.mouseDownPosInPage = {x: e.pageX, y: e.pageY};
+        this.mouseDownPosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
     }
-    */
 };

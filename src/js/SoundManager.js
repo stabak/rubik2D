@@ -1,6 +1,7 @@
 function SoundManager(){
     this.sounds = [];
-    this.supportFileType;
+    this.supportFileType = 'mp3';
+    this.init();
 }
 
 SoundManager.prototype.init = function (){
@@ -34,5 +35,9 @@ SoundManager.prototype.audioSupport = function() {
     var mp3 = !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
     if (mp3) return 'mp3';
     else return 0;
+};
+
+SoundManager.prototype.play = function(name){
+    this.sounds[name].audio.play();
 };
 

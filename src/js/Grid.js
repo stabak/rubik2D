@@ -25,11 +25,11 @@ Grid.prototype.GetCell = function(x,y) {
     return this.array[y][x];
 };
 
-Grid.prototype.Shift = function(cellPos, direction) {
-    if(direction.x == 0){ //column
-        this.ShiftColumn(cellPos.x,direction.y);
-    }else if(direction.y == 0){ //row
-        this.ShiftRow(cellPos.y,direction.x);
+Grid.prototype.Shift = function(cellPos, directionInCellSize) {
+    if(directionInCellSize.x == 0){ //column
+        this.ShiftColumn(cellPos.x,directionInCellSize.y);
+    }else if(directionInCellSize.y == 0){ //row
+        this.ShiftRow(cellPos.y,directionInCellSize.x);
     }
 };
 
@@ -42,7 +42,7 @@ Grid.prototype.ShiftColumn = function(index, direction) {
         var tmpArray = this.GetColumnClone(index);
         if (tmpArray != undefined) {
             for (var i = 0; i < this.array.length; i++) {
-                var next = i + normalizedDirection;
+                var next = i - normalizedDirection;
                 if (next < 0) {
                     next = this.array.length-1;
                 }else if (next>this.array.length-1) {
@@ -63,7 +63,7 @@ Grid.prototype.ShiftRow = function(index, direction) {
         var tmpArray = this.GetRowClone(index);
         if (tmpArray != undefined) {
             for (var i = 0; i < this.array[0].length; i++) {
-                var next = i + normalizedDirection;
+                var next = i - normalizedDirection;
                 if (next < 0) {
                     next = this.array[0].length-1;
                 }else if (next>this.array[0].length-1) {
