@@ -3,12 +3,16 @@
  */
 
 function GridRenderer(grid, containerCanvas){
-    this.colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'teal', 'brown', 'olive', 'violet'];
-
-    this.grid = grid;
+    this.colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'teal', 'brown', 'olive', 'violet', 'darkred', 'darkgreen', 'darkblue', 'darkyellow', 'darkorange', 'gray', 'lightgreen', 'lightblue', 'lightyellow', 'lightgray', '#AB4E52'];
 
     this.containerCanvas = containerCanvas;
     this.ctx = containerCanvas[0].getContext('2d');
+
+    this.Init(grid);
+}
+
+GridRenderer.prototype.Init = function(grid){
+    this.grid = grid;
     this.cellContainerWidth = this.containerCanvas.width() / this.grid.width;
     this.cellContainerHeight = this.containerCanvas.height() / this.grid.height;
     this.cellWidth = this.cellContainerWidth * 0.9;
@@ -21,6 +25,7 @@ function GridRenderer(grid, containerCanvas){
     this.clickedPointIndex = {x:0,y:0};
     this.clickedPointInCanvas = {x:0,y:0};
     this.shiftDirection = {x:0,y:0};
+
 }
 
 GridRenderer.prototype.CalculateIntegerSizes = function(){

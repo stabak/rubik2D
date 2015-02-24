@@ -1,12 +1,10 @@
 function SoundManager(){
     this.sounds = [];
     this.supportFileType = 'mp3';
-    this.init();
-}
-
-SoundManager.prototype.init = function (){
     this.supportFileType = this.audioSupport();
-};
+    this.addSound("beep", "../audio/", "beep");
+    this.addSound("tick", "../audio/", "Tick");
+}
 
 
 SoundManager.prototype.addSound = function (name, path, filename){

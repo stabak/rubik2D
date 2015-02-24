@@ -3,14 +3,15 @@
  */
 
 function Grid(width, height) {
-    this.width = width;
-    this.height = height;
     this.array = [];
-    this.init();
+    this.init(width, height);
 }
-Grid.prototype.init = function() {
+Grid.prototype.init = function(width, height) {
     //List of cells: nxm
     //Initialize with cell values
+    this.width = width;
+    this.height = height;
+
     this.array = new Array(this.height);
 
     for (var i = 0; i < this.height; i++) {
@@ -30,6 +31,9 @@ Grid.prototype.Shift = function(cellPos, directionInCellSize) {
         this.ShiftColumn(cellPos.x,directionInCellSize.y);
     }else if(directionInCellSize.y == 0){ //row
         this.ShiftRow(cellPos.y,directionInCellSize.x);
+    }
+    if(this.IsResolved()){
+        $( document ).trigger( "GridResolved", true );
     }
 };
 
@@ -90,12 +94,13 @@ Grid.prototype.MixRandomly = function(times) {
 
         this.Shift(position, direction);
     }
+    if(this.IsResolved()){this.MixRandomly(times);}
 };
 
 Grid.prototype.IsResolved = function() {
-    for(var i = 0; i<array.length; i++){
-        for(var j =0; j< array[i].length-1; j++){
-            if(array[i][j].content !== array[i][j+1].content){
+    for(var i = 0; i < this.array.length; i++){
+        for(var j =0; j< this.array[i].length-1; j++){
+            if(this.array[i][j].content !== this.array[i][j+1].content){
                 return false;
             }
         }

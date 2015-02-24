@@ -11,6 +11,7 @@
         <script src="js/GridController.js"></script>
         <script src="js/Sound.js"></script>
         <script src="js/SoundManager.js"></script>
+        <script src="js/Application.js"></script>
     </head>
     <body class="not-selectable">
 
@@ -18,20 +19,24 @@
             <div id='Text2d'> 2D </div>
             <div style="display: inline-block; padding-right: 100px ">
                 <div style="color: lightblue; font-size: 15pt;"> Rubik`s </div>
-                <div style="color: lightgreen; font-size: 15pt;"> Cube </div>
+                <div style="color: lightgreen; font-size: 15pt;"> Square </div>
             </div>
             <div style="display: inline-block; font-size: 35pt; color: orange;"> Line Up!! </div>
         </div>
 
         <div style="margin-top: 50px">
             <div id="main-container">
-                <canvas id="container-canvas" width="250" height="250"></canvas>
+                <canvas id="container-canvas" width="500" height="500"></canvas>
             </div>
 
             <div id="menu-container">
-                <div class="menuText"> Level 1</div>
-                <div class="menuText"> Best 1</div>
-                <div class="menuText"> Score 1</div>
+                <div class="menuText" id="LabelLevel"> Level 1</div>
+                <div class="menuText" id="LabelBest"> Best 1</div>
+                <div class="menuText" id="LabelScore"> Score 1</div>
+                <div class="menuText">
+                    <button id="NextButton" style="height:50px; width:100px; font-size: x-large">Next</button>
+                    <button id="RepeatButton" style="height:50px; width:100px; font-size: x-large">Repeat</button>
+                </div>
             </div>
         </div>
     </body>

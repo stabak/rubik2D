@@ -14,7 +14,6 @@ function GridController(grid, gridRenderer, containerCanvas){
     this.gridRenderer = gridRenderer;
     this.containerCanvas = containerCanvas;
 
-    // TODO: add onmouse down and up functions to page!!!!!!!!!!!!!!!!!!!!!!
     this.containerCanvas.mousedown( this.OnMouseDown.bind(this));
     //this.containerCanvas.mouseup(this.OnMouseUp.bind(this));
     //this.containerCanvas.mousemove(this.OnMouseMove.bind(this));
@@ -23,6 +22,14 @@ function GridController(grid, gridRenderer, containerCanvas){
     body.mouseup(this.OnMouseUp.bind(this));
     body.mousemove(this.OnMouseMove.bind(this));
 
+    this.soundmanager = new SoundManager();
+
+    this.shiftThreshold = 5;
+    this.reset();
+}
+
+
+GridController.prototype.reset = function(){
     this.isGridShifting = false;
     this.isShiftingDirectionSelected = false;
     this.selectedShiftingDirection = "";
@@ -30,13 +37,14 @@ function GridController(grid, gridRenderer, containerCanvas){
     this.mouseDownPosInPage = {x: 0, y: 0};
     this.mouseDownPosInCanvas = {x: 0, y: 0};
     this.difDirection = {x: 0, y: 0};
-    this.shiftThreshold = 5;
 
+    this.gridRenderer.clickedPointInCanvas = {x: 0, y: 0};
+    this.gridRenderer.shiftDirection = {x: 0, y: 0};
 }
 
 GridController.prototype.OnMouseMove = function(e){
     if(this.isGridShifting){
-        console.log("onmouse move");
+        //console.log("onmouse move");
 
         var mousePos = {x: e.pageX, y: e.pageY};
 
@@ -69,25 +77,20 @@ GridController.prototype.OnMouseMove = function(e){
 GridController.prototype.OnMouseUp = function(e){
     if(this.isGridShifting){
         var directionInCellSize = { x: Math.round(this.difDirection.x/this.gridRenderer.cellContainerWidth)%this.grid.width, y: Math.round(this.difDirection.y/this.gridRenderer.cellContainerHeight)%this.grid.height};
-        console.log("onmouse up " + directionInCellSize.x + " " + directionInCellSize.y);
+        //console.log("onmouse up " + directionInCellSize.x + " " + directionInCellSize.y);
 
         this.grid.Shift(this.gridRenderer.clickedPointIndex, directionInCellSize);
 
         this.gridRenderer.Draw();
         // make default all parameters
-        this.isGridShifting = false;
-        this.isShiftingDirectionSelected = false;
-        this.selectedShiftingDirection = "";
-        this.mouseDownPosInPage = {x: 0, y: 0};
-        this.mouseDownPosInCanvas = {x: 0, y: 0};
-        this.difDirection = {x: 0, y: 0};
-        this.gridRenderer.clickedPointInCanvas = {x: 0, y: 0};
-        this.gridRenderer.shiftDirection = {x: 0, y: 0};
+
+        this.reset();
     }
 };
 
 GridController.prototype.OnMouseDown = function(e){
-    console.log("onmouse down");
+    //console.log("onmouse down");
+    this.soundmanager.play("tick");
     if(e.which === 1){
         this.isGridShifting = true;
         this.mouseDownPosInPage = {x: e.pageX, y: e.pageY};

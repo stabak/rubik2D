@@ -8,22 +8,29 @@
  * @param height {int}
  * @constructor
  */
-var gridRenderer;
-var soundmanager;
 
-function Rubik(width,height){
-    var grid = new Grid(width, height);
-    grid.MixRandomly(10);
-    var containerCanvas = $('#container-canvas');
-    gridRenderer = new GridRenderer(grid, containerCanvas);
-    gridRenderer.Draw();
-    var gridController = new GridController(grid, gridRenderer, containerCanvas);
+function Rubik(level, minLevel, maxLevel){
+    this.minLevel = minLevel;
+    this.maxLevel = maxLevel;
+    this.level = Math.min(Math.max(level, minLevel), maxLevel);
+
+    this.containerCanvas = $('#container-canvas');
+
+    this.grid = new Grid(this.level+1, this.level+1)
+    this.grid.MixRandomly(this.level*5);
+
+    this.gridRenderer = new GridRenderer(this.grid, this.containerCanvas);
+    this.gridRenderer.Draw();
+
+    this.gridController = new GridController(this.grid, this.gridRenderer, this.containerCanvas);
 }
 
-$(window).load(function()
-{
-    rubik = new Rubik(6,4);
-    soundmanager = new SoundManager();
-    soundmanager.addSound("beep", "../audio/", "beep");
-    soundmanager.addSound("tick", "../audio/", "Tick");
-});
+Rubik.prototype.Init = function (level) {
+    this.level = Math.min(Math.max(level, 1), 20);
+
+    this.grid.init(this.level+1,this.level+1);
+    this.grid.MixRandomly(this.level*5);
+
+    this.gridRenderer.Init(this.grid);
+    this.gridRenderer.Draw();
+}
