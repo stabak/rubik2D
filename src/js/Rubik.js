@@ -13,7 +13,7 @@ var soundmanager;
 
 function Rubik(width,height){
     var grid = new Grid(width, height);
-    //grid.MixRandomly(10);
+    grid.MixRandomly(10);
     var containerCanvas = $('#container-canvas');
     gridRenderer = new GridRenderer(grid, containerCanvas);
     gridRenderer.Draw();
