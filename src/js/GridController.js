@@ -13,9 +13,11 @@ function GridController(grid, gridRenderer, box){
     this.grid = grid;
     this.gridRenderer = gridRenderer;
 
-    box.mousedown(this.OnMouseDown.bind(this));
-    box.mouseup(this.OnMouseUp.bind(this));
-    box.mousemove(this.OnMouseMove.bind(this));
+
+    // TODO: add onmouse down and up functions to page!!!!!!!!!!!!!!!!!!!!!!
+    box.onmousedown = this.OnMouseDown.bind(this);
+    box.onmouseup = this.OnMouseUp.bind(this);
+    box.onmousemove = this.OnMouseMove.bind(this);
 
     this.leftButtonDown = false;
     this.lastPressedPos = null;
@@ -24,6 +26,8 @@ function GridController(grid, gridRenderer, box){
 }
 
 GridController.prototype.OnMouseMove = function(e){
+    console.log("onmouse move add onmouse down and up functions to page!!!!!!!!!!!!!!!!!!!!!! " + e.pageX + " " + e.pageY);
+    /*
    if(e.which === 1 && this.leftButtonDown) {
        this.mousePos = {x: e.pageX, y: e.pageY};
        // find out mouse direction
@@ -46,6 +50,7 @@ GridController.prototype.OnMouseMove = function(e){
        }
        this.lastMovementDirection = dir;
    }
+   */
 };
 
 var GetNormalizedDir = function(vector){
@@ -54,17 +59,21 @@ var GetNormalizedDir = function(vector){
 
 GridController.prototype.OnMouseUp = function(e){
     console.log("onmouse up");
+    /*
     if(e.which === 1) {
         this.leftButtonDown = false;
         this.gridRenderer.OnMouseUp();
     }
+    */
 };
 
 GridController.prototype.OnMouseDown = function(e){
     console.log("onmouse down");
+    /*
     if(e.which === 1) {
         this.leftButtonDown = true;
         this.lastPressedPos = {x: e.pageX, y: e.pageY};
         this.gridRenderer.OnMouseDown(this.lastPressedPos);
     }
+    */
 };

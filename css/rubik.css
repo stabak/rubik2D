@@ -7,13 +7,16 @@ body {
     height: 100px;
     background-color: #333333;
 }
+#container-canvas{
+
+}
 #main-container{
     vertical-align: top;
     display: inline-block;
     position: relative;
     overflow:hidden;
 
-    background-color: dodgerblue;
+    background-color: black;
 }
 #menu-container{
     align-content: center;

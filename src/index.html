@@ -6,7 +6,7 @@
         <script src="js/Rubik.js"></script>
         <script src="js/Cell.js"></script>
         <script src="js/Grid.js"></script>
-        <script src="js/GridRenderer.js"></script>
+        <script src="js/GridRendererCanvas.js"></script>
         <script src="js/GridController.js"></script>
         <script src="js/Sound.js"></script>
         <script src="js/SoundManager.js"></script>
@@ -23,7 +23,10 @@
         </div>
 
         <div style="margin-top: 50px">
-            <div id="main-container"></div>
+            <div id="main-container">
+                <canvas id="container-canvas" width="250" height="250"></canvas>
+            </div>
+
             <div id="menu-container">
                 <div class="menuText"> Level 1</div>
                 <div class="menuText"> Best 1</div>
