@@ -26,6 +26,7 @@ function GridController(grid, gridRenderer, containerCanvas){
 
     this.shiftThreshold = 10;
     this.reset();
+    this.hoveredCellIndex = undefined;
 }
 
 
@@ -44,9 +45,28 @@ GridController.prototype.reset = function(){
 
 GridController.prototype.OnMouseMove = function(e){
     var mousePosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
-    var hoverCellIndex = this.gridRenderer.CalculateCellIndex(mousePosInCanvas.x,mousePosInCanvas.y);
-    if(hoverCellIndex !== undefined) console.log(hoverCellIndex.x + " " + hoverCellIndex.y);
-    GridRenderer.D
+    var hoveredCellIndex = this.gridRenderer.CalculateCellIndex(mousePosInCanvas.x,mousePosInCanvas.y);
+
+    if(hoveredCellIndex !== undefined) {
+        console.log(hoveredCellIndex.x + " " + hoveredCellIndex.y);
+        if(this.hoveredCellIndex !== hoveredCellIndex){
+            if(this.hoveredCellIndex !== undefined){
+                this.gridRenderer.DrawCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
+            }
+            this.hoveredCellIndex = hoveredCellIndex;
+            if(!this.isGridShifting){
+                this.gridRenderer.DrawHighlightCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
+            }
+        }
+    }else{
+        console.log("mouse not in canvas");
+
+        if(this.hoveredCellIndex !== undefined){
+            this.gridRenderer.DrawCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
+            this.hoveredCellIndex = undefined;
+        }
+    }
+
     if(this.isGridShifting){
         //console.log("onmouse move");
 
@@ -80,14 +100,15 @@ GridController.prototype.OnMouseMove = function(e){
 
 GridController.prototype.OnMouseUp = function(e){
     if(this.isGridShifting){
+
         var directionInCellSize = { x: Math.round(this.difDirection.x/this.gridRenderer.cellContainerWidth)%this.grid.width, y: Math.round(this.difDirection.y/this.gridRenderer.cellContainerHeight)%this.grid.height};
         //console.log("onmouse up " + directionInCellSize.x + " " + directionInCellSize.y);
-
-        this.grid.Shift(this.gridRenderer.clickedPointIndex, directionInCellSize);
+        if( directionInCellSize.x !== 0 || directionInCellSize.y !== 0){
+            $( '#LabelScore' ).trigger( "UpdateScore", Math.abs(directionInCellSize.x + directionInCellSize.y ));
+            this.grid.Shift(this.gridRenderer.clickedPointIndex, directionInCellSize);
+        }
 
         this.gridRenderer.Draw();
-        // make default all parameters
-
         this.reset();
     }
 };

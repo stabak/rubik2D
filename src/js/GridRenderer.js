@@ -85,10 +85,19 @@ GridRenderer.prototype.DrawCell = function(indexX, indexY, shiftX, shiftY){
     var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexY * (this.cellHeight + this.cellVerticalSeperation)) + shiftY;
     //this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
     //this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
-    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,this.cellWidth*0.2, this.colors[this.grid.array[indexY][indexX].content]);
+    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,this.cellWidth*0.2, this.colors[this.grid.array[indexY][indexX].content], "fill");
 }
 
-GridRenderer.prototype.RoundRect = function(x, y, w, h, r, color){
+GridRenderer.prototype.DrawHighlightCell = function(indexX, indexY, shiftX, shiftY){
+    var X = Math.floor( this.cellHorizontalSeperation*0.5 + indexX * (this.cellWidth + this.cellHorizontalSeperation)) + shiftX;
+    var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexY * (this.cellHeight + this.cellVerticalSeperation)) + shiftY;
+    //this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
+    //this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
+    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,this.cellWidth*0.2, "rgba(0, 0, 0, 0.1)","fill");
+}
+
+
+GridRenderer.prototype.RoundRect = function(x, y, w, h, r, color, method){
     if (w < 2 * r) r = w / 2;
     if (h < 2 * r) r = h / 2;
 
@@ -102,7 +111,14 @@ GridRenderer.prototype.RoundRect = function(x, y, w, h, r, color){
     this.ctx.arcTo(x,   y,   x+w, y,   r);
     this.ctx.closePath();
     this.ctx.fillStyle = color;
-    this.ctx.fill();
+    //this.ctx.fill();
+    if(method === "stroke"){
+        this.ctx.lineWidth = this.cellContainerWidth*0.03;
+        this.ctx.stroke();
+        this.ctx.lineWidth = 1;
+    }else if(method === "fill"){
+        this.ctx.fill();
+    }
 
     this.ctx.restore();
 }

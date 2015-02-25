@@ -23,6 +23,7 @@ function Rubik(level, minLevel, maxLevel){
     this.gridRenderer.Draw();
 
     this.gridController = new GridController(this.grid, this.gridRenderer, this.containerCanvas);
+    this.totalMovementInThisLevel = 0;
 }
 
 Rubik.prototype.Init = function (level) {
@@ -33,4 +34,5 @@ Rubik.prototype.Init = function (level) {
 
     this.gridRenderer.Init(this.grid);
     this.gridRenderer.Draw();
+    this.totalMovementInThisLevel = 0;
 }

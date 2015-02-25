@@ -33,7 +33,7 @@ Grid.prototype.Shift = function(cellPos, directionInCellSize) {
         this.ShiftRow(cellPos.y,directionInCellSize.x);
     }
     if(this.IsResolved()){
-        $( document ).trigger( "GridResolved", true );
+        $( document ).trigger( "GridResolved" );
     }
 };
 

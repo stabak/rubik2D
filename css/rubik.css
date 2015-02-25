@@ -71,3 +71,17 @@ body {
     color: red;
     font-size: 40pt;
 }
+#NextButton{
+    background-color: darkorange;
+    border-color: darkorange;
+}
+#NextButton:hover{
+    background: orange;
+}
+#RepeatButton{
+    background-color: darkorange;
+    border-color: darkorange;
+}
+#RepeatButton:hover{
+    background: orange;
+ }
