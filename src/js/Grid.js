@@ -98,6 +98,8 @@ Grid.prototype.MixRandomly = function(times) {
 };
 
 Grid.prototype.IsResolved = function() {
+    if(this.width === 1 || this.height === 1) return false;
+
     for(var i = 0; i < this.array.length; i++){
         for(var j =0; j< this.array[i].length-1; j++){
             if(this.array[i][j].content !== this.array[i][j+1].content){

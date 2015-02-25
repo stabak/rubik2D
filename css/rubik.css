@@ -1,6 +1,6 @@
 body {
     text-align: center;
-    background-color: antiquewhite;
+    background-color: black;
     overflow-y:hidden;
 }
 #header-container{
@@ -22,7 +22,7 @@ body {
     align-content: center;
     vertical-align: top;
     display: inline-block;
-    background-color: yellowgreen;
+    background-color: black;
     width: 200px;
     height: 250px;
 }

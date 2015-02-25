@@ -24,7 +24,7 @@ function GridController(grid, gridRenderer, containerCanvas){
 
     this.soundmanager = new SoundManager();
 
-    this.shiftThreshold = 5;
+    this.shiftThreshold = 10;
     this.reset();
 }
 
@@ -43,12 +43,16 @@ GridController.prototype.reset = function(){
 }
 
 GridController.prototype.OnMouseMove = function(e){
+    var mousePosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
+    var hoverCellIndex = this.gridRenderer.CalculateCellIndex(mousePosInCanvas.x,mousePosInCanvas.y);
+    if(hoverCellIndex !== undefined) console.log(hoverCellIndex.x + " " + hoverCellIndex.y);
+    GridRenderer.D
     if(this.isGridShifting){
         //console.log("onmouse move");
 
         var mousePos = {x: e.pageX, y: e.pageY};
 
-        //this.mouseDownPosInCanvas = {x: mousePos.x - this.containerCanvas.offset().left, y: mousePos.y - this.containerCanvas.offset().top};
+
         this.difDirection = {x: mousePos.x - this.mouseDownPosInPage.x , y: mousePos.y - this.mouseDownPosInPage.y};
 
         if(this.isShiftingDirectionSelected === false){

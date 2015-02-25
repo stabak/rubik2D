@@ -49,7 +49,7 @@ GridRenderer.prototype.Draw = function(){
 }
 
 GridRenderer.prototype.DrawShiftedCells = function(){
-    this.CalculateClickedCellIndex();
+    this.clickedPointIndex = this.CalculateCellIndex(this.clickedPointInCanvas.x, this.clickedPointInCanvas.y);
     var visibleShift;
     var it = 0;
     var i = 0;
@@ -75,17 +75,35 @@ GridRenderer.prototype.DrawShiftedCells = function(){
     }
 }
 
-GridRenderer.prototype.CalculateClickedCellIndex = function(){
-    this.clickedPointIndex.x = Math.floor(this.clickedPointInCanvas.x / this.cellContainerWidth);
-    this.clickedPointIndex.y = Math.floor(this.clickedPointInCanvas.y / this.cellContainerHeight);
+GridRenderer.prototype.CalculateCellIndex = function(X, Y){
+    if(X<0 || X >= this.containerCanvas.width() || Y < 0 || Y >= this.containerCanvas.height()) return undefined;
+    return {x: Math.floor(X / this.cellContainerWidth), y : Math.floor(Y / this.cellContainerHeight)};
 }
 
 GridRenderer.prototype.DrawCell = function(indexX, indexY, shiftX, shiftY){
-    this.ctx.save();
     var X = Math.floor( this.cellHorizontalSeperation*0.5 + indexX * (this.cellWidth + this.cellHorizontalSeperation)) + shiftX;
     var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexY * (this.cellHeight + this.cellVerticalSeperation)) + shiftY;
-    this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
-    this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
+    //this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
+    //this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
+    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,this.cellWidth*0.2, this.colors[this.grid.array[indexY][indexX].content]);
+}
+
+GridRenderer.prototype.RoundRect = function(x, y, w, h, r, color){
+    if (w < 2 * r) r = w / 2;
+    if (h < 2 * r) r = h / 2;
+
+    this.ctx.save();
+
+    this.ctx.beginPath();
+    this.ctx.moveTo(x+r, y);
+    this.ctx.arcTo(x+w, y,   x+w, y+h, r);
+    this.ctx.arcTo(x+w, y+h, x,   y+h, r);
+    this.ctx.arcTo(x,   y+h, x,   y,   r);
+    this.ctx.arcTo(x,   y,   x+w, y,   r);
+    this.ctx.closePath();
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
+
     this.ctx.restore();
 }
 
