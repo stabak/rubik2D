@@ -138,3 +138,8 @@ GridRenderer.prototype.DrawBlackColumn = function(indexColumn){
     this.ctx.fillStyle = 'black';
     this.ctx.fillRect (X, Y, this.cellWidth, this.containerCanvas.height());
 }
+
+GridRenderer.prototype.FadeoutBord = function(){
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+    this.ctx.fillRect (0, 0, this.containerCanvas.width(), this.containerCanvas.height());
+}

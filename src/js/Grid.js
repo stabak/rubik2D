@@ -2,9 +2,17 @@
  * Created by akbay on 21/2/2015.
  */
 
-function Grid(width, height) {
+function Grid(width, height, gridArray) {
     this.array = [];
-    this.init(width, height);
+
+    if(typeof gridArray !== "undefined"){
+        this.array = gridArray;
+        this.width = this.array[0].length;
+        this.height = this.array.length;
+    }else{
+        this.init(width, height);
+    }
+    this.resolved = this.IsResolved();
 }
 Grid.prototype.init = function(width, height) {
     //List of cells: nxm
@@ -26,14 +34,17 @@ Grid.prototype.GetCell = function(x,y) {
     return this.array[y][x];
 };
 
-Grid.prototype.Shift = function(cellPos, directionInCellSize) {
+Grid.prototype.Shift = function(cellPos, directionInCellSize, isMixing) {
     if(directionInCellSize.x == 0){ //column
         this.ShiftColumn(cellPos.x,directionInCellSize.y);
     }else if(directionInCellSize.y == 0){ //row
         this.ShiftRow(cellPos.y,directionInCellSize.x);
     }
-    if(this.IsResolved()){
-        $( document ).trigger( "GridResolved" );
+    if(!isMixing){
+        if(this.IsResolved()){
+            $( document ).trigger( "GridResolved" );
+            this.resolved = true;
+        }
     }
 };
 
@@ -92,9 +103,10 @@ Grid.prototype.MixRandomly = function(times) {
 
         if(Math.random()<0.5 && i != 0){ direction = {x:rnds,y:0};}
 
-        this.Shift(position, direction);
+        this.Shift(position, direction, true);
     }
     if(this.IsResolved()){this.MixRandomly(times);}
+    else this.resolved = false;
 };
 
 Grid.prototype.IsResolved = function() {

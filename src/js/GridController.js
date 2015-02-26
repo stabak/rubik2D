@@ -45,27 +45,29 @@ GridController.prototype.reset = function(){
 
 GridController.prototype.OnMouseMove = function(e){
     var mousePosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
-    var hoveredCellIndex = this.gridRenderer.CalculateCellIndex(mousePosInCanvas.x,mousePosInCanvas.y);
 
-    if(hoveredCellIndex !== undefined) {
-        console.log(hoveredCellIndex.x + " " + hoveredCellIndex.y);
-        if(this.hoveredCellIndex !== hoveredCellIndex){
-            if(this.hoveredCellIndex !== undefined){
-                this.gridRenderer.DrawCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
-            }
-            this.hoveredCellIndex = hoveredCellIndex;
-            if(!this.isGridShifting){
-                this.gridRenderer.DrawHighlightCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
-            }
-        }
-    }else{
-        console.log("mouse not in canvas");
-
-        if(this.hoveredCellIndex !== undefined){
-            this.gridRenderer.DrawCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
-            this.hoveredCellIndex = undefined;
-        }
-    }
+    // DrawHighlightCell
+    //var hoveredCellIndex = this.gridRenderer.CalculateCellIndex(mousePosInCanvas.x,mousePosInCanvas.y);
+    //
+    //if(hoveredCellIndex !== undefined) {
+    //    console.log(hoveredCellIndex.x + " " + hoveredCellIndex.y);
+    //    if(this.hoveredCellIndex !== hoveredCellIndex){
+    //        if(this.hoveredCellIndex !== undefined){
+    //            this.gridRenderer.DrawCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
+    //        }
+    //        this.hoveredCellIndex = hoveredCellIndex;
+    //        if(!this.isGridShifting){
+    //            this.gridRenderer.DrawHighlightCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
+    //        }
+    //    }
+    //}else{
+    //    console.log("mouse not in canvas");
+    //
+    //    if(this.hoveredCellIndex !== undefined){
+    //        this.gridRenderer.DrawCell(this.hoveredCellIndex.x, this.hoveredCellIndex.y, 0, 0);
+    //        this.hoveredCellIndex = undefined;
+    //    }
+    //}
 
     if(this.isGridShifting){
         //console.log("onmouse move");
@@ -109,16 +111,21 @@ GridController.prototype.OnMouseUp = function(e){
         }
 
         this.gridRenderer.Draw();
+        if(this.grid.resolved){
+            this.gridRenderer.FadeoutBord();
+        }
         this.reset();
     }
 };
 
 GridController.prototype.OnMouseDown = function(e){
     //console.log("onmouse down");
-    this.soundmanager.play("tick");
-    if(e.which === 1){
-        this.isGridShifting = true;
-        this.mouseDownPosInPage = {x: e.pageX, y: e.pageY};
-        this.mouseDownPosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
+    if(!this.grid.resolved){
+        this.soundmanager.play("tick");
+        if(e.which === 1){
+            this.isGridShifting = true;
+            this.mouseDownPosInPage = {x: e.pageX, y: e.pageY};
+            this.mouseDownPosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
+        }
     }
 };

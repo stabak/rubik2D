@@ -9,15 +9,19 @@
  * @constructor
  */
 
-function Rubik(level, minLevel, maxLevel){
+function Rubik(level, minLevel, maxLevel, gridArray){
     this.minLevel = minLevel;
     this.maxLevel = maxLevel;
     this.level = Math.min(Math.max(level, minLevel), maxLevel);
 
     this.containerCanvas = $('#container-canvas');
 
-    this.grid = new Grid(this.level+1, this.level+1)
-    this.grid.MixRandomly(this.level*5);
+    if(typeof gridArray !== "undefined"){
+        this.grid = new Grid(this.level+1, this.level+1, gridArray);
+    }else{
+        this.grid = new Grid(this.level+1, this.level+1);
+        this.grid.MixRandomly(this.level*5);
+    }
 
     this.gridRenderer = new GridRenderer(this.grid, this.containerCanvas);
     this.gridRenderer.Draw();

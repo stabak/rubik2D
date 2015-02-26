@@ -16,7 +16,7 @@
 
         <div id="header-container" >
             <div id='Text2d'> 2D </div>
-            <div style="display: inline-block; padding-right: 100px ">
+            <div style="display: inline-block; padding-right: 100px;">
                 <div style="color: lightblue; font-size: 15pt;"> Rubik`s </div>
                 <div style="color: lightgreen; font-size: 15pt;"> Square </div>
             </div>
@@ -29,12 +29,17 @@
             </div>
 
             <div id="menu-container">
-                <div class="menuText" id="LabelLevel"> Level 1</div>
+                <div class="menuText" >
+                    <button class="aButton" id="PreviousLevelButton" style="display: inline-block;" > < </button>
+                    <div id="LabelLevel" style="display: inline-block;" > Level 1</div>
+                    <button class="aButton" id="NextLevelButton" style="display: inline-block;" > > </button>
+
+                </div>
                 <div class="menuText" id="LabelBest"> Best 1</div>
                 <div class="menuText" id="LabelScore"> Score 1</div>
                 <div class="menuText">
-                    <button id="NextButton" style="height:50px; width:100px; font-size: x-large">Next</button>
-                    <button id="RepeatButton" style="height:50px; width:100px; font-size: x-large">Repeat</button>
+                    <button class="aButton" id="NextButton" style="height:50px; width:100px; font-size: x-large">Next</button>
+                    <button class="aButton" id="RepeatButton" style="height:50px; width:100px; font-size: x-large">Repeat</button>
                 </div>
             </div>
         </div>
