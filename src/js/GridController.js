@@ -133,6 +133,7 @@ GridController.prototype.OnMouseDown = function(e){
 };
 
 GridController.prototype.OnTouchMove = function(e){
+    e.preventDefault();
     var touchobj = e.originalEvent.changedTouches[0];
     var eventaaa = {pageX: Math.floor( touchobj.clientX), pageY: Math.floor( touchobj.clientY), which:1};
     this.OnMouseMove(eventaaa);
@@ -140,6 +141,7 @@ GridController.prototype.OnTouchMove = function(e){
 };
 
 GridController.prototype.OnTouchEnd = function(e){
+    e.preventDefault();
     var touchobj = e.originalEvent.changedTouches[0];
     var eventaaa = {pageX: Math.floor( touchobj.clientX), pageY: Math.floor( touchobj.clientY), which:1};
     this.OnMouseUp(eventaaa);
@@ -147,6 +149,7 @@ GridController.prototype.OnTouchEnd = function(e){
 };
 
 GridController.prototype.OnTouchStart = function(e){
+    e.preventDefault();
     var touchobj = e.originalEvent.changedTouches[0];
     var eventaaa = {pageX: Math.floor( touchobj.clientX), pageY: Math.floor( touchobj.clientY), which:1};
     this.OnMouseDown(eventaaa);
