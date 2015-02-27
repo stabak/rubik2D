@@ -4,7 +4,7 @@ body {
     overflow-y:hidden;
 }
 #header-container{
-    height: 100px;
+    height: 50px;
     background-color: #333333;
 }
 #container-canvas{
@@ -14,61 +14,26 @@ body {
     vertical-align: top;
     position: relative;
     overflow:hidden;
-    background-color: darkblue;
+    background-color: black;
 }
 #menu-container{
     align-content: center;
     vertical-align: top;
-    background-color: blue;
+    background-color: black;
 }
-.reflection{
-    position: absolute;
-    white-space: nowrap;
-}
-.reflection-vertical{
-    position: absolute;
-    white-space: nowrap;
-}
-.reflection-vertical .cell {
-    display: block;
-}
-.cell{
-    display: inline-block;
-    text-align: center;
-    line-height: 40px;
-    width: 40px;
-    height: 40px;
-    margin: 5px;
-    padding: 5px;
-    background-color: coral;
-    box-sizing: border-box;
-}
-.not-selectable{
 
-    -webkit-user-select: none;  /* Chrome all / Safari all */
-    -moz-user-select: none;     /* Firefox all */
-    -ms-user-select: none;      /* IE 10+ */
-
-    /* No support for these yet, use at own risk */
-    -o-user-select: none;
-    user-select: none;
-}
 
 .menuText{
-    background-color: #5F9EA0;
+    background-color: black;
+    color: #999999;
     margin-top:  2px;
     margin-bottom:  2px;
-    margin-left:  2px;
+    margin-left:  15px;
     margin-right:  2px;
     display: inline-block;
 }
 
 
-#Text2d{
-    display: inline-block;
-    color: red;
-    font-size: 40pt;
-}
 .aButton{
     background-color: darkorange;
     border-color: darkorange;

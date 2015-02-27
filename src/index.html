@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=500, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
+        <meta name="viewport" content="width=100, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
         <title>Rubik2D</title>
         <link rel="stylesheet" type="text/css" href="../css/rubik.css">
         <script src="../libs/jquery.js"></script>
@@ -17,12 +17,12 @@
     <body class="not-selectable">
 
         <div id="header-container" >
-            <div id='Text2d'> 2D </div>
-            <div style="display: inline-block; padding-right: 100px;">
-                <div style="color: lightblue; font-size: 15pt;"> Rubik`s </div>
-                <div style="color: lightgreen; font-size: 15pt;"> Square </div>
+            <div id='Text2d'style="display: inline-block; color: red; font-size: 30pt;"> 2D </div>
+            <div style="display: inline-block; padding-right: 10px;">
+                <div style="color: lightblue; font-size: 10pt;"> Rubik`s </div>
+                <div style="color: lightgreen; font-size: 10pt;"> Square </div>
             </div>
-            <div style="display: inline-block; font-size: 35pt; color: orange;"> Line Up!! </div>
+            <div style="display: inline-block; font-size: 20pt; color: orange;"> Line Up!! </div>
         </div>
 
         <div id="menu-container">
@@ -39,8 +39,9 @@
         <div id="main-container">
             <canvas id="container-canvas"></canvas>
         </div>
-            <button class="aButton" id="NextButton" > Next </button>
-            <button class="aButton" id="RepeatButton" > Repeat </button>
+
+        <button class="aButton" id="NextButton" > Next </button>
+        <button class="aButton" id="RepeatButton" > Repeat </button>
 
     </body>
 </html>

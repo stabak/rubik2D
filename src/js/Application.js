@@ -2,29 +2,24 @@
  * Created by sena on 24/2/2015.
  */
 
-
+var ratio = 0.95;
 
 $( window ).ready( function() {
-        var canvas = $("#container-canvas")[0];
-        var width = $(window).width();
-        var height = $(window).height();
+    var canvas = $("#container-canvas")[0];
+    var width = $(window).width();
+    var height = $(window).height();
 
-        if(width > height){
-            canvas.width = height*0.7;
-            canvas.height = height*0.7;
-        }else{
-            canvas.width = width*0.7;
-            canvas.height = width*0.7;
-        }
+    if(width > height){
+        canvas.width = height*ratio;
+        canvas.height = height*ratio;
+    }else{
+        canvas.width = width*ratio;
+        canvas.height = width*ratio;
+    }
 });
-
-
-
 
 $(document).ready(function(){
     var rubik;
-
-
 
     $(window).resize(function(){
         var canvas = $("#container-canvas")[0];
@@ -32,18 +27,16 @@ $(document).ready(function(){
         var height = $(window).height();
 
         if(width > height){
-            canvas.width = height*0.7;
-            canvas.height = height*0.7;
+            canvas.width = height*ratio;
+            canvas.height = height*ratio;
         }else{
-            canvas.width = width*0.7;
-            canvas.height = width*0.7;
+            canvas.width = width*ratio;
+            canvas.height = width*ratio;
         }
 
         rubik.gridRenderer.Init();
         rubik.gridRenderer.Draw();
     });
-
-
 
     if (typeof(Storage) != "undefined") {
 
@@ -78,13 +71,10 @@ $(document).ready(function(){
     $('#NextLevelButton').click(function(){InitRubik(rubik.level+1);});
     $('#PreviousLevelButton').click(function(){InitRubik(rubik.level-1);});
 
-
-
     $('#NextButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level+1);}});
     $('#RepeatButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level);}});
     $('#NextLevelButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level+1);}});
     $('#PreviousLevelButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level-1);}});
-
 
     $( window ).unload( function() {
         if (typeof(Storage) != "undefined") {
@@ -102,7 +92,6 @@ $(document).ready(function(){
     $( '#LabelScore' ).on( "UpdateScore", function( event, param1 ) {
         rubik.totalMovementInThisLevel += param1;
         $('#LabelScore').text('Score ' + rubik.totalMovementInThisLevel);
-
     });
 
     function UpdateGUIForNewLevel(){
@@ -144,7 +133,6 @@ $(document).ready(function(){
             }
         }
     }
-
 });
 
 

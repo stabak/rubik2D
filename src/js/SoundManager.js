@@ -6,7 +6,6 @@ function SoundManager(){
     this.addSound("tick", "../audio/", "Tick");
 }
 
-
 SoundManager.prototype.addSound = function (name, path, filename){
 
     url = path + filename + "." + this.supportFileType;
@@ -16,7 +15,6 @@ SoundManager.prototype.addSound = function (name, path, filename){
     this.sounds[name]=tmpSound;
 };
 
-
 SoundManager.prototype.loadAudio = function(url, vol){
     var audio = new Audio();
     audio.src = url;
@@ -24,7 +22,6 @@ SoundManager.prototype.loadAudio = function(url, vol){
     audio.volume = vol;
     return audio;
 };
-
 
 SoundManager.prototype.audioSupport = function() {
     var a = document.createElement('audio');

@@ -14,7 +14,6 @@ GridRenderer.prototype.Init = function(grid){
     if(grid !== undefined){
         this.grid = grid;
     }
-
     this.ctx = this.containerCanvas[0].getContext('2d');
     this.cellContainerWidth = this.containerCanvas.width() / this.grid.width;
     this.cellContainerHeight = this.containerCanvas.height() / this.grid.height;
