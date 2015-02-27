@@ -22,13 +22,16 @@ function GridController(grid, gridRenderer, containerCanvas){
     body.mouseup(this.OnMouseUp.bind(this));
     body.mousemove(this.OnMouseMove.bind(this));
 
+    body.on("touchstart",this.OnTouchStart.bind(this));
+    body.on("touchmove", this.OnTouchMove.bind(this));
+    body.on("touchend", this.OnTouchEnd.bind(this));
+
     this.soundmanager = new SoundManager();
 
     this.shiftThreshold = 10;
     this.reset();
     this.hoveredCellIndex = undefined;
 }
-
 
 GridController.prototype.reset = function(){
     this.isGridShifting = false;
@@ -128,4 +131,25 @@ GridController.prototype.OnMouseDown = function(e){
             this.mouseDownPosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
         }
     }
+};
+
+GridController.prototype.OnTouchMove = function(e){
+    var touchobj = e.originalEvent.changedTouches[0];
+    var eventaaa = {pageX: Math.floor( touchobj.clientX), pageY: Math.floor( touchobj.clientY), which:1};
+    this.OnMouseMove(eventaaa);
+    console.log("touch move " + touchobj.clientX + " " + touchobj.clientY);
+};
+
+GridController.prototype.OnTouchEnd = function(e){
+    var touchobj = e.originalEvent.changedTouches[0];
+    var eventaaa = {pageX: Math.floor( touchobj.clientX), pageY: Math.floor( touchobj.clientY), which:1};
+    this.OnMouseUp(eventaaa);
+    console.log("touch End " + touchobj.clientX + " " + touchobj.clientY);
+};
+
+GridController.prototype.OnTouchStart = function(e){
+    var touchobj = e.originalEvent.changedTouches[0];
+    var eventaaa = {pageX: Math.floor( touchobj.clientX), pageY: Math.floor( touchobj.clientY), which:1};
+    this.OnMouseDown(eventaaa);
+    console.log("touch start " + touchobj.clientX + " " + touchobj.clientY);
 };
