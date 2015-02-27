@@ -6,13 +6,16 @@ function GridRenderer(grid, containerCanvas){
     this.colors = ['red', 'green', 'blue', 'yellow', 'orange', 'white', 'teal', 'brown', 'olive', 'violet', 'darkred', 'darkgreen', 'darkblue', 'darkyellow', 'darkorange', 'gray', 'lightgreen', 'lightblue', 'lightyellow', 'lightgray', '#AB4E52'];
 
     this.containerCanvas = containerCanvas;
-    this.ctx = containerCanvas[0].getContext('2d');
 
     this.Init(grid);
 }
 
 GridRenderer.prototype.Init = function(grid){
-    this.grid = grid;
+    if(grid !== undefined){
+        this.grid = grid;
+    }
+
+    this.ctx = this.containerCanvas[0].getContext('2d');
     this.cellContainerWidth = this.containerCanvas.width() / this.grid.width;
     this.cellContainerHeight = this.containerCanvas.height() / this.grid.height;
     this.cellWidth = this.cellContainerWidth * 0.9;
@@ -26,6 +29,11 @@ GridRenderer.prototype.Init = function(grid){
     this.clickedPointInCanvas = {x:0,y:0};
     this.shiftDirection = {x:0,y:0};
 
+    if($("#main-container").length > 0){
+        this.backGroundColor = $("#main-container").css("background-color");
+    }else{
+        this.backGroundColor = "black";
+    }
 }
 
 GridRenderer.prototype.CalculateIntegerSizes = function(){
@@ -46,6 +54,9 @@ GridRenderer.prototype.Draw = function(){
             this.DrawCell( i, j, 0, 0);
         }
     }
+    if(this.grid.IsResolved()){
+        this.FadeoutBord();
+    }
 }
 
 GridRenderer.prototype.DrawShiftedCells = function(){
@@ -54,7 +65,7 @@ GridRenderer.prototype.DrawShiftedCells = function(){
     var it = 0;
     var i = 0;
     if (this.shiftDirection.x !== 0) {
-        this.DrawBlackRow(this.clickedPointIndex.y);
+        this.EraseRow(this.clickedPointIndex.y);
         visibleShift = this.shiftDirection.x - Math.floor(this.shiftDirection.x /this.containerCanvas.width())*this.containerCanvas.width();
 
         for (it = -1; it < 1; it++) {
@@ -64,7 +75,7 @@ GridRenderer.prototype.DrawShiftedCells = function(){
         }
 
     }else if (this.shiftDirection.y !== 0) {
-        this.DrawBlackColumn(this.clickedPointIndex.x);
+        this.EraseColumn(this.clickedPointIndex.x);
         visibleShift = this.shiftDirection.y - Math.floor(this.shiftDirection.y /this.containerCanvas.height())*this.containerCanvas.height();
 
         for (it = -1; it < 1; it++) {
@@ -85,7 +96,11 @@ GridRenderer.prototype.DrawCell = function(indexX, indexY, shiftX, shiftY){
     var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexY * (this.cellHeight + this.cellVerticalSeperation)) + shiftY;
     //this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
     //this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
-    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,this.cellWidth*0.2, this.colors[this.grid.array[indexY][indexX].content], "fill");
+    var round = this.cellWidth*0.2;
+    if(this.cellWidth  > this.cellHeight){
+        round = this.cellHeight*0.2;
+    }
+    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,round, this.colors[this.grid.array[indexY][indexX].content], "fill");
 }
 
 GridRenderer.prototype.DrawHighlightCell = function(indexX, indexY, shiftX, shiftY){
@@ -93,7 +108,11 @@ GridRenderer.prototype.DrawHighlightCell = function(indexX, indexY, shiftX, shif
     var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexY * (this.cellHeight + this.cellVerticalSeperation)) + shiftY;
     //this.ctx.fillStyle = this.colors[this.grid.array[indexY][indexX].content];
     //this.ctx.fillRect (X, Y, this.cellWidth, this.cellHeight);
-    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,this.cellWidth*0.2, "rgba(0, 0, 0, 0.1)","fill");
+    var round = this.cellWidth*0.2;
+    if(this.cellWidth  > this.cellHeight){
+        round = this.cellHeight*0.2;
+    }
+    this.RoundRect(X,Y,this.cellWidth,this.cellHeight,round, "rgba(0, 0, 0, 0.1)","fill");
 }
 
 
@@ -123,19 +142,19 @@ GridRenderer.prototype.RoundRect = function(x, y, w, h, r, color, method){
     this.ctx.restore();
 }
 
-GridRenderer.prototype.DrawBlackRow = function(indexRow){
+GridRenderer.prototype.EraseRow = function(indexRow){
     this.ctx.save();
     var X = 0;
     var Y = Math.floor( this.cellVerticalSeperation*0.5 + indexRow * (this.cellHeight + this.cellVerticalSeperation));
-    this.ctx.fillStyle = 'black';
+    this.ctx.fillStyle = this.backGroundColor;
     this.ctx.fillRect (X, Y, this.containerCanvas.width(), this.cellHeight);
     this.ctx.restore();
 }
 
-GridRenderer.prototype.DrawBlackColumn = function(indexColumn){
+GridRenderer.prototype.EraseColumn = function(indexColumn){
     var X = Math.floor( this.cellHorizontalSeperation*0.5 + indexColumn * (this.cellWidth + this.cellHorizontalSeperation));
     var Y = 0;
-    this.ctx.fillStyle = 'black';
+    this.ctx.fillStyle = this.backGroundColor;
     this.ctx.fillRect (X, Y, this.cellWidth, this.containerCanvas.height());
 }
 

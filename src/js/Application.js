@@ -3,8 +3,47 @@
  */
 
 
+
+$( window ).ready( function() {
+        var canvas = $("#container-canvas")[0];
+        var width = $(window).width();
+        var height = $(window).height();
+
+        if(width > height){
+            canvas.width = height*0.5;
+            canvas.height = height*0.5;
+        }else{
+            canvas.width = width*0.5;
+            canvas.height = width*0.5;
+        }
+});
+
+
+
+
 $(document).ready(function(){
     var rubik;
+
+
+
+    $(window).resize(function(){
+        var canvas = $("#container-canvas")[0];
+        var width = $(window).width();
+        var height = $(window).height();
+
+        if(width > height){
+            canvas.width = height*0.5;
+            canvas.height = height*0.5;
+        }else{
+            canvas.width = width*0.5;
+            canvas.height = width*0.5;
+        }
+
+        rubik.gridRenderer.Init();
+        rubik.gridRenderer.Draw();
+    });
+
+
 
     if (typeof(Storage) != "undefined") {
 

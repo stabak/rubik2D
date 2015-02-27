@@ -1,7 +1,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
+        <meta name="viewport" content="width=500, initial-scale=1, maximum-scale=1, user-scalable=0"/> <!--320-->
         <title>Rubik2D</title>
         <link rel="stylesheet" type="text/css" href="../css/rubik.css">
         <script src="../libs/jquery.js"></script>
@@ -25,25 +25,22 @@
             <div style="display: inline-block; font-size: 35pt; color: orange;"> Line Up!! </div>
         </div>
 
-        <div style="margin-top: 50px">
-            <div id="main-container">
-                <canvas id="container-canvas" width="500" height="500"></canvas>
-            </div>
+        <div id="menu-container">
+            <div class="menuText" >
+                <button class="aButton" id="PreviousLevelButton" style="display: inline-block;" > < </button>
+                <div id="LabelLevel" style="display: inline-block;" > Level 1</div>
+                <button class="aButton" id="NextLevelButton" style="display: inline-block;" > > </button>
 
-            <div id="menu-container">
-                <div class="menuText" >
-                    <button class="aButton" id="PreviousLevelButton" style="display: inline-block;" > < </button>
-                    <div id="LabelLevel" style="display: inline-block;" > Level 1</div>
-                    <button class="aButton" id="NextLevelButton" style="display: inline-block;" > > </button>
-
-                </div>
-                <div class="menuText" id="LabelBest"> Best 1</div>
-                <div class="menuText" id="LabelScore"> Score 1</div>
-                <div class="menuText">
-                    <button class="aButton" id="NextButton" style="height:50px; width:100px; font-size: x-large">Next</button>
-                    <button class="aButton" id="RepeatButton" style="height:50px; width:100px; font-size: x-large">Repeat</button>
-                </div>
             </div>
+            <div class="menuText" id="LabelBest"> Best 1</div>
+            <div class="menuText" id="LabelScore"> Score 1</div>
         </div>
+
+        <div id="main-container">
+            <canvas id="container-canvas"></canvas>
+        </div>
+            <button class="aButton" id="NextButton" > Next </button>
+            <button class="aButton" id="RepeatButton" > Repeat </button>
+
     </body>
 </html>

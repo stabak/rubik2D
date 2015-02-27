@@ -15,22 +15,21 @@ function GridController(grid, gridRenderer, containerCanvas){
     this.containerCanvas = containerCanvas;
 
     this.containerCanvas.mousedown( this.OnMouseDown.bind(this));
+    this.containerCanvas.on("touchstart",this.OnTouchStart.bind(this));
     //this.containerCanvas.mouseup(this.OnMouseUp.bind(this));
     //this.containerCanvas.mousemove(this.OnMouseMove.bind(this));
 
-    var body = $('body');
-    body.mouseup(this.OnMouseUp.bind(this));
-    body.mousemove(this.OnMouseMove.bind(this));
+    $(window).mouseup(this.OnMouseUp.bind(this));
+    $(window).mousemove(this.OnMouseMove.bind(this));
 
-    body.on("touchstart",this.OnTouchStart.bind(this));
-    body.on("touchmove", this.OnTouchMove.bind(this));
-    body.on("touchend", this.OnTouchEnd.bind(this));
+    $(window).on("touchmove", this.OnTouchMove.bind(this));
+    $(window).on("touchend", this.OnTouchEnd.bind(this));
 
     this.soundmanager = new SoundManager();
 
     this.shiftThreshold = 10;
     this.reset();
-    this.hoveredCellIndex = undefined;
+    //this.hoveredCellIndex = undefined;
 }
 
 GridController.prototype.reset = function(){
@@ -47,8 +46,8 @@ GridController.prototype.reset = function(){
 }
 
 GridController.prototype.OnMouseMove = function(e){
-    var mousePosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
 
+    //var mousePosInCanvas = {x:  e.pageX - this.containerCanvas.offset().left, y: e.pageY - this.containerCanvas.offset().top};
     // DrawHighlightCell
     //var hoveredCellIndex = this.gridRenderer.CalculateCellIndex(mousePosInCanvas.x,mousePosInCanvas.y);
     //
