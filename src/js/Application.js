@@ -10,11 +10,11 @@ $( window ).ready( function() {
         var height = $(window).height();
 
         if(width > height){
-            canvas.width = height*0.5;
-            canvas.height = height*0.5;
+            canvas.width = height*0.7;
+            canvas.height = height*0.7;
         }else{
-            canvas.width = width*0.5;
-            canvas.height = width*0.5;
+            canvas.width = width*0.7;
+            canvas.height = width*0.7;
         }
 });
 
@@ -32,11 +32,11 @@ $(document).ready(function(){
         var height = $(window).height();
 
         if(width > height){
-            canvas.width = height*0.5;
-            canvas.height = height*0.5;
+            canvas.width = height*0.7;
+            canvas.height = height*0.7;
         }else{
-            canvas.width = width*0.5;
-            canvas.height = width*0.5;
+            canvas.width = width*0.7;
+            canvas.height = width*0.7;
         }
 
         rubik.gridRenderer.Init();
@@ -68,25 +68,23 @@ $(document).ready(function(){
         $('#RepeatButton').fadeIn( 300 );
     }
 
-    $('#NextButton').click(function() {
-        rubik.Init(rubik.level+1);
+    function InitRubik(level){
+        rubik.Init(level);
         UpdateGUIForNewLevel();
-    });
+    };
 
-    $('#RepeatButton').click(function() {
-        rubik.Init(rubik.level);
-        UpdateGUIForNewLevel();
-    });
+    $('#NextButton').click(function(){InitRubik(rubik.level+1);});
+    $('#RepeatButton').click(function(){InitRubik(rubik.level);});
+    $('#NextLevelButton').click(function(){InitRubik(rubik.level+1);});
+    $('#PreviousLevelButton').click(function(){InitRubik(rubik.level-1);});
 
-    $('#NextLevelButton').click(function() {
-        rubik.Init(rubik.level+1);
-        UpdateGUIForNewLevel();
-    });
 
-    $('#PreviousLevelButton').click(function() {
-        rubik.Init(rubik.level-1);
-        UpdateGUIForNewLevel();
-    });
+
+    $('#NextButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level+1);}});
+    $('#RepeatButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level);}});
+    $('#NextLevelButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level+1);}});
+    $('#PreviousLevelButton').on("touchstart",function(){ if(!this.disabled){InitRubik(rubik.level-1);}});
+
 
     $( window ).unload( function() {
         if (typeof(Storage) != "undefined") {
