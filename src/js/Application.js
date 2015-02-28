@@ -2,9 +2,26 @@
  * Created by sena on 24/2/2015.
  */
 
-var ratio = 0.95;
+var ratio = 0.85;
+var isDeviceMob = false;
 
-$( window ).ready( function() {
+function detectmob() {
+    if( navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)
+    ){
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function AdjustSize(){
     var canvas = $("#container-canvas")[0];
     var width = $(window).width();
     var height = $(window).height();
@@ -16,24 +33,27 @@ $( window ).ready( function() {
         canvas.width = width*ratio;
         canvas.height = width*ratio;
     }
+}
+
+$( window ).on( "orientationchange", function( event ) {
+    console.log( "This device is in " + event.orientation + " / " + window.orientation + "° mode!" );
+    AdjustSize();
+});
+
+$( window ).ready( function() {
+    isDevicesMob= detectmob();
+
+    if(isDeviceMob == true){
+        ratio = 0.95;
+    }
+    AdjustSize();
 });
 
 $(document).ready(function(){
     var rubik;
 
     $(window).resize(function(){
-        var canvas = $("#container-canvas")[0];
-        var width = $(window).width();
-        var height = $(window).height();
-
-        if(width > height){
-            canvas.width = height*ratio;
-            canvas.height = height*ratio;
-        }else{
-            canvas.width = width*ratio;
-            canvas.height = width*ratio;
-        }
-
+        AdjustSize();
         rubik.gridRenderer.Init();
         rubik.gridRenderer.Draw();
     });
